@@ -3,6 +3,7 @@ package com.example.mlkit_posedetection_jetpack.camera_usecase
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.video.Recorder
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -51,7 +53,6 @@ fun CameraScreen(viewModel: CameraViewModel) {
     val graphicOverlay = remember { GraphicOverlay() }
     val poseResult = remember { mutableStateOf<Pose?>(null) }
     val bitmapImage = remember { mutableStateOf<Bitmap?>(null) }
-    val viewModel: CameraViewModel = remember { CameraViewModel() }
     val cameraProvider = remember { viewModel.getProcessCameraProvider(context) }
 
     var videoCapture: MutableState<VideoCapture<Recorder>?> =
@@ -82,6 +83,9 @@ fun CameraScreen(viewModel: CameraViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .onGloballyPositioned {
+                    Log.d("BoxSize","${it.size.width} ${it.size.height}")
+                }
         ) {
             CameraPreview(
                 previewView = previewView,
@@ -93,6 +97,7 @@ fun CameraScreen(viewModel: CameraViewModel) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 if (bitmapImage.value != null) {
+                    Log.d("Graphic","${size.height} ${size.width}")
                     graphicOverlay.updateGraphicOverlay(
                         width = size.width,
                         height = size.height,

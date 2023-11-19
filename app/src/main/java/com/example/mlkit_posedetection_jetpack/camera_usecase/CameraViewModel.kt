@@ -137,6 +137,7 @@ class CameraViewModel : ViewModel() {
 
     fun requestAllPermission(context: Context) {
         if (!hasRequiredPermissions(context)) {
+            Log.d("Permission1","permission check")
             ActivityCompat.requestPermissions(
                 context as Activity, CAMERAX_PERMISSION,0
             )

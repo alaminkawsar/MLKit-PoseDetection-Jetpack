@@ -53,13 +53,7 @@ class PoseDetectorAnalyzer(
         val analysis = bindAnalysisUseCase()
 
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
-        Log.d("VideoCaptured","$videoCapture")
-        if (videoCapture != null) {
-            cameraProvider?.bindToLifecycle(lifecycleOwner, cameraSelector, preview, videoCapture, analysis)
-        } else {
-            cameraProvider?.bindToLifecycle(lifecycleOwner, cameraSelector, preview, analysis)
-            Log.d("videoCaptured","Video Capture Object is Null")
-        }
+        cameraProvider?.bindToLifecycle(lifecycleOwner, cameraSelector, preview, analysis)
 
     }
     @OptIn(ExperimentalGetImage::class) private fun bindAnalysisUseCase(): ImageAnalysis? {

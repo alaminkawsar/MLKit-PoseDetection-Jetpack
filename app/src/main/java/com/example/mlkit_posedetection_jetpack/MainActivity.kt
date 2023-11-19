@@ -8,11 +8,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mlkit_posedetection_jetpack.camera_usecase.CameraScreen
 import com.example.mlkit_posedetection_jetpack.camera_usecase.CameraViewModel
 import com.example.mlkit_posedetection_jetpack.ui.theme.MLKitPoseDetectionJetpackTheme
@@ -36,21 +33,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MLKitPoseDetectionJetpackTheme {
-        Greeting("Android")
     }
 }

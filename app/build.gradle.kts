@@ -69,6 +69,14 @@ dependencies {
     implementation ("androidx.camera:camera-view:${camerax_version}")
     implementation ("androidx.camera:camera-extensions:${camerax_version}")
 
+    // Compose dependencies
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
+    implementation ("androidx.navigation:navigation-compose:2.5.0-rc01")
+    // Coroutines
+    val coroutine_version = "1.6.1"
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutine_version}")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutine_version}")
+
 
     //base sdk model
     implementation ("com.google.mlkit:pose-detection:18.0.0-beta3")

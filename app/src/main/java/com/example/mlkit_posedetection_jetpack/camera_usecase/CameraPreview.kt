@@ -15,7 +15,7 @@ fun CameraPreview(
         modifier = modifier,
         factory = {
             previewView.apply {
-                this.scaleType = PreviewView.ScaleType.FILL_START
+                this.scaleType = PreviewView.ScaleType.FILL_CENTER
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT

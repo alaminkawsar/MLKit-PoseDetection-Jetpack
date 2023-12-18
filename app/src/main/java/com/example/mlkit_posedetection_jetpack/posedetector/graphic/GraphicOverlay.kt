@@ -51,7 +51,7 @@ class GraphicOverlay {
     // area of overlay View after scaling.
     private var postScaleHeightOffset = 0f
     private var isImageFlipped = false
-    var needUpdateTransformation = true
+    private var needUpdateTransformation = true
 
     /**
      * Base class for a custom graphics object to be rendered within the graphic overlay. Subclass
@@ -90,7 +90,6 @@ class GraphicOverlay {
          * Adjusts the x coordinate from the image's coordinate system to the view coordinate system.
          */
         fun translateX(x: Float): Float {
-            Log.d("CheckOverlay","${overlay.width}")
             return if (overlay.isImageFlipped) {
                 overlay.width - (scale(x) - overlay.postScaleWidthOffset)
             } else {
@@ -182,7 +181,7 @@ class GraphicOverlay {
      */
     fun onDraw(drawCanvas: DrawScope) {
         synchronized(lock) {
-            updateTransformationIfNeeded()
+             updateTransformationIfNeeded()
             for (graphic in graphics) {
                 graphic.draw(drawCanvas)
             }

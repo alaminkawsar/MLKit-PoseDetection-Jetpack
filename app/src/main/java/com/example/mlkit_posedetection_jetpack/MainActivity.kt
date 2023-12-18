@@ -25,11 +25,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModel = viewModel<CameraViewModel>()
                     // A surface container using the 'background' color from the theme
-                    CameraScreen(
-                        viewModel = viewModel
-                    )
+                    CameraScreen()
                 }
             }
         }

@@ -6,8 +6,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
-import androidx.camera.video.Recorder
-import androidx.camera.video.VideoCapture
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -35,8 +33,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mlkit_posedetection_jetpack.R
-import com.example.mlkit_posedetection_jetpack.posedetector.PoseDetectorAnalyzer
-import com.example.mlkit_posedetection_jetpack.posedetector.graphic.CameraImageGraphic
 import com.example.mlkit_posedetection_jetpack.posedetector.graphic.GraphicOverlay
 import com.example.mlkit_posedetection_jetpack.posedetector.graphic.PoseGraphic
 import com.google.mlkit.vision.pose.Pose
@@ -45,39 +41,29 @@ import com.google.mlkit.vision.pose.Pose
 @RequiresApi(Build.VERSION_CODES.P)
 @SuppressLint("UnsafeOptInUsageError", "RememberReturnType")
 @Composable
-fun CameraScreen(viewModel: CameraViewModel) {
+fun CameraScreen() {
     val context = LocalContext.current
-    viewModel.requestAllPermission(context)
     val previewView = remember { PreviewView(context) }
     val lifecycleOwner = LocalLifecycleOwner.current
     val graphicOverlay = remember { GraphicOverlay() }
     val poseResult = remember { mutableStateOf<Pose?>(null) }
     val bitmapImage = remember { mutableStateOf<Bitmap?>(null) }
-    val cameraProvider = remember { viewModel.getProcessCameraProvider(context) }
-
-    var videoCapture: MutableState<VideoCapture<Recorder>?> =
-        remember { mutableStateOf(viewModel.createVideoCaptureUseCase(context = context)) }
-    var recordingStart: MutableState<Boolean> = remember { mutableStateOf(false) }
-    val cameraSelector: MutableState<CameraSelector> = remember {
-        mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA)
+    val cameraSelector: MutableState<Int> = remember {
+        mutableStateOf(CameraSelector.LENS_FACING_BACK)
     }
-    val analyzer = remember {
-        if (cameraProvider.value != null) {
-            PoseDetectorAnalyzer(
-                context = context,
-                cameraProvider = cameraProvider.value,
-                graphicOverlay = graphicOverlay,
-                lifecycleOwner = lifecycleOwner,
-                previewView = previewView,
-                lensFacing = CameraSelector.LENS_FACING_BACK,
-                videoCapture = videoCapture.value
-            ) { bitmap, pose ->
+
+    val cameraViewModel: CameraViewModel = remember {
+        CameraViewModel(
+            graphicOverlay = graphicOverlay,
+            lifecycleOwner = lifecycleOwner,
+            cameraSelector = cameraSelector.value,
+            onResults = { bitmap, pose ->
                 poseResult.value = pose
                 bitmapImage.value = bitmap
             }
-        }
+        )
     }
-
+    val bindAnalysisData = remember { cameraViewModel.bindAllUseCase(context = context, previewView = previewView) }
     Scaffold{ padding ->
         Box(
             modifier = Modifier
@@ -96,14 +82,13 @@ fun CameraScreen(viewModel: CameraViewModel) {
             Canvas(
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (bitmapImage.value != null) {
-                    Log.d("Graphic","${size.height} ${size.width}")
+                if (bitmapImage.value != null && poseResult.value!=null) {
                     graphicOverlay.updateGraphicOverlay(
                         width = size.width,
                         height = size.height,
-                        isFlipped = false
+                        isFlipped = cameraSelector.value == CameraSelector.LENS_FACING_FRONT
                     )
-                    graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
+//                    graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
                     graphicOverlay.add(PoseGraphic(graphicOverlay, poseResult.value!!))
                     graphicOverlay.onDraw(this)
                     graphicOverlay.clear()
@@ -116,7 +101,13 @@ fun CameraScreen(viewModel: CameraViewModel) {
             ) {
                 IconButton(
                     onClick = {
-
+                        cameraSelector.value = if (cameraSelector.value == CameraSelector.LENS_FACING_BACK) {
+                            CameraSelector.LENS_FACING_FRONT
+                        } else {
+                            CameraSelector.LENS_FACING_BACK
+                        }
+                        Log.d("CameraSelector", "CameraSelector: ${cameraSelector.value}")
+                        cameraViewModel.changeCameraFacing(cameraSelector.value, previewView = previewView, context = context)
                     },
                     modifier = Modifier
                         .offset(16.dp, 16.dp)

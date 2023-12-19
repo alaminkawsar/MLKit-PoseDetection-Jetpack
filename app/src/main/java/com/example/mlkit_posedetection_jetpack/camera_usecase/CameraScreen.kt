@@ -60,20 +60,23 @@ fun CameraScreen() {
             cameraSelector = cameraSelector.value,
             onResults = { bitmap, pose ->
                 bitmapImage.value?.recycle()
-                bitmapImage.value = null
                 bitmapImage.value = bitmap
                 poseResult.value = pose
             }
         )
     }
-    val bindAnalysisData = remember { cameraViewModel.bindAllUseCase(context = context, previewView = previewView) }
+
     Scaffold{ padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .onGloballyPositioned {
-//                    Log.d("BoxSize","${it.size.width} ${it.size.height}")
+                .onGloballyPositioned { screen->
+                    graphicOverlay.updateGraphicOverlay(
+                        width = screen.size.width.toFloat(),
+                        height = screen.size.height.toFloat(),
+                    )
+                    cameraViewModel.bindAllUseCase(context, previewView)
                 }
         ) {
             CameraPreview(
@@ -86,11 +89,8 @@ fun CameraScreen() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 if (bitmapImage.value != null && poseResult.value!=null) {
-                    graphicOverlay.updateGraphicOverlay(
-                        width = size.width,
-                        height = size.height,
-                    )
-                    // graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
+                    // Log.d("CanvasSize","${size.width} ${size.height}")
+                    graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
                     graphicOverlay.add(PoseGraphic(graphicOverlay, poseResult.value!!))
                     graphicOverlay.onDraw(this)
                     graphicOverlay.clear()

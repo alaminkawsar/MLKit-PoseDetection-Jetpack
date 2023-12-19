@@ -139,7 +139,7 @@ class CameraViewModel(
                     poseDetectorProcessor.processImageProxy(
                         image = imageProxy
                     ) { results ->
-                        bitmap = BitmapUtils.getBitmap(imageProxy)
+                        bitmap = BitmapUtils.getBitmap(imageProxy, graphicOverlay)
                         if (bitmap != null) {
                             if (results != null) {
                                 onResults(bitmap!!, results)

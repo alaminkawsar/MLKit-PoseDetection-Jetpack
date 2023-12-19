@@ -175,6 +175,10 @@ class GraphicOverlay {
         Log.d("IsImageFlipped", "${this.isImageFlipped} ${transformationMatrix.toShortString()}")
         needUpdateTransformation = false
     }
+    fun getTransformationMatrix(): Matrix {
+        updateTransformationIfNeeded()
+        return transformationMatrix
+    }
 
     /**
      * Draws the overlay with its associated graphic objects.

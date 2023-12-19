@@ -10,6 +10,7 @@ import android.media.Image.Plane
 import android.util.Log
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
+import com.example.mlkit_posedetection_jetpack.posedetector.graphic.GraphicOverlay
 import com.example.mlkit_posedetection_jetpack.posedetector.mlkit.FrameMetadata
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
@@ -21,7 +22,7 @@ object BitmapUtils {
     /**
      * Converts NV21 format byte buffer to bitmap.
      */
-    fun getBitmap(data: ByteBuffer, metadata: FrameMetadata): Bitmap? {
+    private fun getBitmap(data: ByteBuffer, metadata: FrameMetadata, graphicOverlay: GraphicOverlay): Bitmap? {
         data.rewind()
         val imageInBuffer = ByteArray(data.limit())
         data[imageInBuffer, 0, imageInBuffer.size]
@@ -33,7 +34,7 @@ object BitmapUtils {
             image.compressToJpeg(Rect(0, 0, metadata.width, metadata.height), 80, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
             stream.close()
-            return rotateBitmap(bmp, metadata.rotation, flipX = false, flipY = false)
+            return rotateBitmap(bmp, metadata.rotation, flipX = false, flipY = false, graphicOverlay)
         } catch (e: Exception) {
             Log.e("VisionProcessorBase", "Error: " + e.message)
         }
@@ -44,7 +45,7 @@ object BitmapUtils {
      * Converts a YUV_420_888 image from CameraX API to a bitmap.
      */
     @ExperimentalGetImage
-    fun getBitmap(image: ImageProxy): Bitmap? {
+    fun getBitmap(image: ImageProxy, graphicOverlay: GraphicOverlay): Bitmap? {
         val frameMetadata: FrameMetadata = FrameMetadata.Builder()
             .setWidth(image.width)
             .setHeight(image.height)
@@ -53,7 +54,7 @@ object BitmapUtils {
         val nv21Buffer = yuv420ThreePlanesToNV21(
             image.image!!.planes, image.width, image.height
         )
-        return getBitmap(nv21Buffer, frameMetadata)
+        return getBitmap(nv21Buffer, frameMetadata, graphicOverlay)
     }
 
     /**
@@ -63,7 +64,8 @@ object BitmapUtils {
         bitmap: Bitmap,
         rotationDegrees: Int,
         flipX: Boolean,
-        flipY: Boolean
+        flipY: Boolean,
+        graphicOverlay: GraphicOverlay
     ): Bitmap {
         val matrix = Matrix()
 
@@ -72,14 +74,16 @@ object BitmapUtils {
 
         // Mirror the image along the X or Y axis.
         matrix.postScale(if (flipX) -1.0f else 1.0f, if (flipY) -1.0f else 1.0f)
-        val rotatedBitmap =
-            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-
+        val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        val drawingBitmap = Bitmap.createBitmap(rotatedBitmap, 0, 0, rotatedBitmap.width, rotatedBitmap.height,graphicOverlay.getTransformationMatrix(), false)
         // Recycle the old bitmap if it has changed.
         if (rotatedBitmap != bitmap) {
             bitmap.recycle()
         }
-        return rotatedBitmap
+        if (rotatedBitmap != drawingBitmap) {
+            rotatedBitmap.recycle()
+        }
+        return drawingBitmap
     }
 
     /**

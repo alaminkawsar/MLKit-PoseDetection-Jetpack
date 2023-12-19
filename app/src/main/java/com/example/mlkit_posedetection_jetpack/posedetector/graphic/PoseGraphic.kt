@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 
@@ -30,13 +31,6 @@ class PoseGraphic(
         val landmarks = pose.allPoseLandmarks
         if (landmarks.isEmpty()) {
             return
-        }
-
-
-
-        // Draw all the points
-        for (landmark in landmarks) {
-            drawPoint(canvas, landmark, whiteBrush)
         }
 
         val nose = pose.getPoseLandmark(PoseLandmark.NOSE)
@@ -115,6 +109,10 @@ class PoseGraphic(
         drawLine(canvas, rightAnkle, rightHeel, rightBrush)
         drawLine(canvas, rightHeel, rightFootIndex, rightBrush)
 
+        // Draw all the points
+        for (landmark in landmarks) {
+            drawPoint(canvas, landmark, whiteBrush)
+        }
 
         // Draw inFrameLikelihood for all points
 //        if (showInFrameLikelihood) {
@@ -140,7 +138,7 @@ class PoseGraphic(
         canvas: DrawScope,
         startLandmark: PoseLandmark?,
         endLandmark: PoseLandmark?,
-        paint: Brush
+        paint: Brush,
     ) {
         val start = startLandmark!!.position3D
         val end = endLandmark!!.position3D
@@ -151,14 +149,15 @@ class PoseGraphic(
         canvas.drawLine(
             brush = paint,
             start =  Offset(translateX(start.x), translateY(start.y)),
-            end = Offset(translateX(end.x), translateY(end.y))
+            end = Offset(translateX(end.x), translateY(end.y)),
+            strokeWidth = strokeWidth
         )
     }
 
     companion object {
         private const val DOT_RADIUS = 8.0f
         private const val IN_FRAME_LIKELIHOOD_TEXT_SIZE = 30.0f
-        private const val STROKE_WIDTH = 10.0f
+        private const val STROKE_WIDTH = 8.0f
         private const val POSE_CLASSIFICATION_TEXT_SIZE = 60.0f
     }
 }

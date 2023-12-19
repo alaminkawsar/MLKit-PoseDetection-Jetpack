@@ -3,8 +3,8 @@ package com.example.mlkit_posedetection_jetpack.posedetector.graphic
 import android.graphics.Matrix
 import android.util.Log
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import com.google.android.gms.common.internal.Preconditions
 import com.example.mlkit_posedetection_jetpack.posedetector.graphic.GraphicOverlay.Graphic
+import com.google.android.gms.common.internal.Preconditions
 
 /**
  * A view which renders a series of custom graphics to be overlayed on top of an associated preview

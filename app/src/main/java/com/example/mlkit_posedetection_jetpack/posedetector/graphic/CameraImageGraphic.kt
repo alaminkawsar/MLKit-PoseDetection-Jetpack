@@ -9,10 +9,9 @@ class CameraImageGraphic(overlay: GraphicOverlay, private val bitmap: Bitmap) :
     GraphicOverlay.Graphic(overlay) {
     override fun draw(canvas: DrawScope) {
         // canvas.drawBitmap(bitmap, getTransformationMatrix(), null)
-        val bitmapImage = bitmap.asImageBitmap()
-//        Bitmap.createBitmap(
-//            bitmap, 0, 0, bitmap.width, bitmap.height, getTransformationMatrix(), false
-//        )
-         canvas.drawImage(bitmapImage)
+        val bitmapImage = Bitmap.createBitmap(
+            bitmap, 0, 0, bitmap.width, bitmap.height, getTransformationMatrix(), false
+        )
+        canvas.drawImage(bitmapImage.asImageBitmap())
     }
 }

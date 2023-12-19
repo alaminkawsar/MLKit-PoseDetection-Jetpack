@@ -146,8 +146,6 @@ class CameraViewModel(
                                 onResults(bitmap!!, results)
                             }
                         }
-                        bitmap?.recycle()
-                        bitmap = null
                     }
                 } catch (e: MlKitException) {
                     Log.e("Camera", "Failed to process image. Error: " + e.localizedMessage)

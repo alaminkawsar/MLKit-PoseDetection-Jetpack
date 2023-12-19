@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mlkit_posedetection_jetpack.R
+import com.example.mlkit_posedetection_jetpack.posedetector.graphic.CameraImageGraphic
 import com.example.mlkit_posedetection_jetpack.posedetector.graphic.GraphicOverlay
 import com.example.mlkit_posedetection_jetpack.posedetector.graphic.PoseGraphic
 import com.google.mlkit.vision.pose.Pose
@@ -58,8 +59,12 @@ fun CameraScreen() {
             lifecycleOwner = lifecycleOwner,
             cameraSelector = cameraSelector.value,
             onResults = { bitmap, pose ->
-                poseResult.value = pose
+                if (bitmapImage.value!=bitmap) {
+                    bitmapImage.value?.recycle()
+                    bitmapImage.value = null
+                }
                 bitmapImage.value = bitmap
+                poseResult.value = pose
             }
         )
     }
@@ -70,7 +75,7 @@ fun CameraScreen() {
                 .fillMaxSize()
                 .padding(padding)
                 .onGloballyPositioned {
-                    Log.d("BoxSize","${it.size.width} ${it.size.height}")
+//                    Log.d("BoxSize","${it.size.width} ${it.size.height}")
                 }
         ) {
             CameraPreview(
@@ -88,7 +93,7 @@ fun CameraScreen() {
                         height = size.height,
                         isFlipped = cameraSelector.value == CameraSelector.LENS_FACING_FRONT
                     )
-//                    graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
+                    graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
                     graphicOverlay.add(PoseGraphic(graphicOverlay, poseResult.value!!))
                     graphicOverlay.onDraw(this)
                     graphicOverlay.clear()

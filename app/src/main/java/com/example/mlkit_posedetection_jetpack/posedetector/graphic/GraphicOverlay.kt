@@ -148,6 +148,9 @@ class GraphicOverlay {
             isImageFlipped = isFlipped
             needUpdateTransformation = true
         }
+        if (isFlipped!=this.isImageFlipped) {
+            updateTransformationIfNeeded()
+        }
     }
 
     private fun updateTransformationIfNeeded() {

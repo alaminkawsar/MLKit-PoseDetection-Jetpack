@@ -61,7 +61,6 @@ class GraphicOverlay {
     fun updateGraphicOverlay(width: Float, height: Float, isFlipped: Boolean = false) {
         this.width = width
         this.height = height
-        this.isImageFlipped = isFlipped
     }
     abstract class Graphic(private val overlay: GraphicOverlay) {
         /**

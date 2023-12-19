@@ -59,10 +59,8 @@ fun CameraScreen() {
             lifecycleOwner = lifecycleOwner,
             cameraSelector = cameraSelector.value,
             onResults = { bitmap, pose ->
-                if (bitmapImage.value!=bitmap) {
-                    bitmapImage.value?.recycle()
-                    bitmapImage.value = null
-                }
+                bitmapImage.value?.recycle()
+                bitmapImage.value = null
                 bitmapImage.value = bitmap
                 poseResult.value = pose
             }

@@ -50,7 +50,7 @@ fun CameraScreen() {
     val poseResult = remember { mutableStateOf<Pose?>(null) }
     val bitmapImage = remember { mutableStateOf<Bitmap?>(null) }
     val cameraSelector: MutableState<Int> = remember {
-        mutableStateOf(CameraSelector.LENS_FACING_BACK)
+        mutableStateOf(CameraSelector.LENS_FACING_FRONT)
     }
 
     val cameraViewModel: CameraViewModel = remember {

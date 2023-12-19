@@ -61,6 +61,8 @@ class GraphicOverlay {
     fun updateGraphicOverlay(width: Float, height: Float, isFlipped: Boolean = false) {
         this.width = width
         this.height = height
+        needUpdateTransformation = isImageFlipped != isFlipped
+        this.isImageFlipped = isFlipped
     }
     abstract class Graphic(private val overlay: GraphicOverlay) {
         /**
@@ -144,11 +146,6 @@ class GraphicOverlay {
         synchronized(lock) {
             this.imageWidth = imageWidth
             this.imageHeight = imageHeight
-            isImageFlipped = isFlipped
-            needUpdateTransformation = true
-        }
-        if (isFlipped!=this.isImageFlipped) {
-            updateTransformationIfNeeded()
         }
     }
 

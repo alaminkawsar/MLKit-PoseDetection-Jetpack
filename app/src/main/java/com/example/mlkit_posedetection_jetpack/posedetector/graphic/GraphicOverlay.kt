@@ -58,7 +58,7 @@ class GraphicOverlay {
      * this and implement the [Graphic.draw] method to define the graphics element. Add
      * instances to the overlay using [GraphicOverlay.add].
      */
-    fun updateGraphicOverlay(width: Float, height: Float, isFlipped: Boolean = false) {
+    fun updateGraphicOverlay(width: Float, height: Float) {
         this.width = width
         this.height = height
     }

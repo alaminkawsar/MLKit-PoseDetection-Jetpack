@@ -105,9 +105,7 @@ class CameraViewModel(
         val preview = Preview.Builder().build().apply {
             setSurfaceProvider(previewView.surfaceProvider)
         }
-        if (imageAnalysis == null) {
-            imageAnalysis = bindAnalysisUseCase(context)
-        }
+        imageAnalysis = bindAnalysisUseCase(context)
         //Log.d("CameraProvider","videoCapture")
         if (videoCapture == null) {
             videoCapture = createVideoCaptureUseCase(context)
@@ -128,6 +126,7 @@ class CameraViewModel(
             ImageAnalysis.Analyzer { imageProxy: ImageProxy ->
                 if (needUpdateGraphicOverlayImageSourceInfo) {
                     val isImageFlipped = lensFacing == CameraSelector.LENS_FACING_FRONT
+                    Log.d("CameraViewModel", "isImageFlipped: $isImageFlipped")
                     val rotationDegrees = imageProxy.imageInfo.rotationDegrees
                     if (rotationDegrees == 0 || rotationDegrees == 180) {
                         graphicOverlay.setImageSourceInfo(imageProxy.width, imageProxy.height, isImageFlipped)
@@ -137,7 +136,7 @@ class CameraViewModel(
                     needUpdateGraphicOverlayImageSourceInfo = false
                 }
                 try {
-                    poseDetectorProcessor!!.processImageProxy(
+                    poseDetectorProcessor.processImageProxy(
                         image = imageProxy
                     ) { results ->
                         bitmap = BitmapUtils.getBitmap(imageProxy)

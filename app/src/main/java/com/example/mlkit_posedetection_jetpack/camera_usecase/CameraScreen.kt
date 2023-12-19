@@ -89,9 +89,8 @@ fun CameraScreen() {
                     graphicOverlay.updateGraphicOverlay(
                         width = size.width,
                         height = size.height,
-                        isFlipped = cameraSelector.value == CameraSelector.LENS_FACING_FRONT
                     )
-                    graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
+                    // graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
                     graphicOverlay.add(PoseGraphic(graphicOverlay, poseResult.value!!))
                     graphicOverlay.onDraw(this)
                     graphicOverlay.clear()

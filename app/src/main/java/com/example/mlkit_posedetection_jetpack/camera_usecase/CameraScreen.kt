@@ -33,7 +33,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mlkit_posedetection_jetpack.R
-import com.example.mlkit_posedetection_jetpack.posedetector.graphic.CameraImageGraphic
 import com.example.mlkit_posedetection_jetpack.posedetector.graphic.GraphicOverlay
 import com.example.mlkit_posedetection_jetpack.posedetector.graphic.PoseGraphic
 import com.google.mlkit.vision.pose.Pose
@@ -89,8 +88,7 @@ fun CameraScreen() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 if (bitmapImage.value != null && poseResult.value!=null) {
-                    // Log.d("CanvasSize","${size.width} ${size.height}")
-                    graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
+//                    graphicOverlay.add(CameraImageGraphic(graphicOverlay, bitmapImage.value!!))
                     graphicOverlay.add(PoseGraphic(graphicOverlay, poseResult.value!!))
                     graphicOverlay.onDraw(this)
                     graphicOverlay.clear()
